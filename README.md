@@ -2,6 +2,8 @@
 
 Installs the Oracle Client. This role was created for bug finding regarding shell execution issue in Ansible > 1.6.10.
 
+You can find the issue [here](https://github.com/ansible/ansible-modules-core/issues/1287).
+
 ## Requirements
 
 * create folder **assets**
