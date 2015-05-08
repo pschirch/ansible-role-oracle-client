@@ -1,0 +1,8 @@
+---
+# file: tasks/setup-Suse.yml
+
+# Ensure unzip is installed, to be able to unarchive packages.
+- name: "Ensure unzip is installed."
+  zypper: >
+    name=unzip
+    state=latest

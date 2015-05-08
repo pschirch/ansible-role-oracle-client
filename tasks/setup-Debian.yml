@@ -1,0 +1,15 @@
+---
+# file: tasks/setup-Debian.yml
+
+# Ensure unzip is installed, to be able to unarchive
+- name: "Ensure unzip is installed (Debian)."
+  apt: >
+    name=unzip
+    state=latest
+
+# Oracle Installer looking for /bin/awk
+- name: "Ensure /bin/awk is available (Debian)."
+  file: >
+    src=/usr/bin/awk
+    dest=/bin/awk
+    state=link

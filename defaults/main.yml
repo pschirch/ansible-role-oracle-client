@@ -1,0 +1,45 @@
+---
+# file: defaults/main.yml
+
+# user and groups
+oracle_client_user: oracle
+oracle_client_user_password: $6$rounds=100000$HFyGy9WjCtoNs3uW$1ecjkT7JCmhQ.IZBtgUINkTYhW3DSlzVxm6hZ6LhguRCzqnpuSH1D2yL/XhLql9zpeqZC6WdBlZnybIe7f7pZ/ # password=oracle
+oracle_client_user_comment: Oracle Client User
+oracle_client_user_primary_group: oinstall
+oracle_client_user_secondary_group: dba
+
+# installer packages
+oracle_client_download_source_archive_name: oracle_client.zip
+oracle_client_download_target_archive_name: oracle_client.zip
+oracle_client_download_directory: /home/oracle/Downloads
+oracle_client_download_archive: "{{ oracle_client_download_directory }}/{{ oracle_client_download_target_archive_name }}"
+oracle_client_download_unarchive: "{{ oracle_client_download_directory }}/client"
+
+# folders
+oracle_client_root_directory: /home/oracle
+oracle_client_base_directory: "{{ oracle_client_root_directory }}/app/oracle"
+oracle_client_inventory_directory: "{{ oracle_client_root_directory }}/app/oraInventory"
+oracle_client_home_directory: "{{ oracle_client_base_directory }}/product/11.2.0/client_1"
+oracle_client_tns_admin_directory: "{{ oracle_client_base_directory }}/client_1/network/admin"
+
+# rsp
+oracle_client_download_source_rsp_name: client.rsp
+oracle_client_download_target_rsp_name: client.rsp
+oracle_client_download_rsp: "{{ oracle_client_download_directory }}/{{ oracle_client_download_target_rsp_name }}"
+
+oracle_client_response_file_version: http://www.oracle.com/2007/install/rspfmt_clientinstall_response_schema_v11_2_0
+oracle_client_response_file_hostname: localhost
+oracle_client_response_file_unix_group_name: "{{ oracle_client_user_primary_group }}"
+oracle_client_response_file_inventory_location: "{{ oracle_client_inventory_directory }}"
+oracle_client_response_file_selected_languages: en
+oracle_client_response_file_oracle_home: "{{ oracle_client_home_directory }}"
+oracle_client_response_file_oracle_base: "{{ oracle_client_base_directory }}"
+oracle_client_response_file_install_tpye: Administrator
+oracle_client_response_file_upgrading: false
+oracle_client_response_file_custom_components: ''
+oracle_client_response_file_oramts_port_number: ''
+oracle_client_response_file_scheduler_agent_hostname: ''
+oracle_client_response_file_scheduler_agent_port_number: ''
+
+# environment variables
+oracle_client_nls_lang: American_America.UTF8

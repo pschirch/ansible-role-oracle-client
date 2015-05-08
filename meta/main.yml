@@ -1,0 +1,25 @@
+---
+# file: meta/main.yml
+
+allow_duplicates: no
+
+dependencies: []
+
+galaxy_info:
+  author: Patrick Schirch
+  description: Oracle Client Installation
+  company: "Kommunale Immobilien Jena"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 1.6
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 14.04
+    - name: openSUSE
+      versions:
+        - 12.3
+        - 13.1
+        - 13.2
+  categories:
+    - database
+    - oracle

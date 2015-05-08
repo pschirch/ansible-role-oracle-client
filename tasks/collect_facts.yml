@@ -1,0 +1,23 @@
+---
+# file: tasks/collect_facts.yml
+
+# Collecting role facts
+- name: "Checking if Oracle Client archive is available."
+  stat: path={{ oracle_client_download_archive }}
+  register: st_oracle_client_download_archive
+
+- name: "Checking if Oracle Client archive is unpacked."
+  stat: path={{ oracle_client_download_unarchive }}
+  register: st_oracle_client_download_unarchive
+
+- name: "Checking if Oracle Client RSP is available."
+  stat: path={{ oracle_client_download_rsp }}
+  register: st_oracle_client_download_rsp
+
+- name: "Checking if Oracle Client home directory exists."
+  stat: path={{ oracle_client_home_directory }}
+  register: st_oracle_client_home_directory
+
+- name: "Checking if Oracle Client inventory directory exists."
+  stat: path={{ oracle_client_inventory_directory }}
+  register: st_oracle_client_inventory_directory

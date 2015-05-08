@@ -1,0 +1,97 @@
+---
+# file: tasks/main.yml
+
+# Collecting role facts
+- include: collect_facts.yml
+
+# Setup and install tasks.
+- include: setup-Debian.yml
+  when: ansible_os_family == "Suse"
+
+- include: setup-Debian.yml
+  when: ansible_os_family == "Debian"
+
+# Ensure hostname exists in /etc/hosts
+- name: "Ensure hostname exists in /etc/hosts."
+  lineinfile: >
+    dest=/etc/hosts
+    regexp='^127\.0\.0\.1'
+    line='127.0.0.1 localhost {{ ansible_hostname }}'
+
+# Creating Oracle Client groups
+- name: "Creating groups."
+  group: >
+    name={{ item }}
+    state=present
+  with_items:
+    - "{{ oracle_client_user_primary_group }}"
+    - "{{ oracle_client_user_secondary_group }}"
+
+# Creating Oracle Client user
+- name: "Creating user."
+  user: >
+    name={{ oracle_client_user }}
+    comment="{{ oracle_client_user_comment }}"
+    group={{ oracle_client_user_primary_group }}
+    groups={{ oracle_client_user_secondary_group }}
+    password={{ oracle_client_user_password }}
+
+# Creating Oracle Client root directory.
+- name: "Creating Oracle Client root directory."
+  file: >
+    path={{ oracle_client_root_directory }}
+    state=directory
+    owner={{ oracle_client_user }}
+    group={{ oracle_client_user_primary_group }}
+
+# Configuring the oracle user's environment
+- name: "Configuring the oracle user's environment."
+  template: >
+    src=../templates/oracle-client.sh.j2
+    dest=/etc/profile.d/oracle-client.sh
+
+# Creating download directory for oracle_client_user
+- name: "Creating download directory."
+  file: >
+    path={{ oracle_client_download_directory }}
+    state=directory
+  sudo_user: "{{ oracle_client_user }}"
+
+# Copying Oracle Client package.
+- name: "Copying Oracle Client package."
+  copy: >
+    src="assets/{{ oracle_client_download_source_archive_name }}"
+    dest="{{ oracle_client_download_archive }}"
+  when: st_oracle_client_download_archive.stat.exists == False
+  sudo_user: "{{ oracle_client_user }}"
+
+# Unarchiving the Oracle Client package.
+- name: "Unarchiving the Oracle Client package."
+  unarchive:
+    src={{ oracle_client_download_archive }}
+    dest={{ oracle_client_download_directory }}
+    copy=no
+  when: st_oracle_client_download_unarchive.stat.exists == False
+  sudo_user: "{{ oracle_client_user }}"
+
+# Copying Oracle Client RSP.
+- name: "Copying Oracle Client RSP."
+  template: >
+    src=../templates/client.rsp.j2
+    dest={{ oracle_client_download_rsp }}
+    owner={{ oracle_client_user }}
+    group={{ oracle_client_user_primary_group }}
+
+# Installing Oracle Client
+- name: "Installing Oracle Client."
+  shell: "/bin/bash {{ oracle_client_download_unarchive }}/runInstaller -silent -ignorePrereq -ignoreSysPrereqs -noconfig -responseFile {{ oracle_client_download_rsp }}"
+  when: st_oracle_client_home_directory.stat.exists == False or st_oracle_client_inventory_directory.stat.exists == False
+  sudo_user: "{{ oracle_client_user }}"
+
+# Executing orainstRoot.sh in inventory as root.
+- name: "Executing orainstRoot.sh in inventory as root."
+  shell: sh "{{ oracle_client_inventory_directory }}/orainstRoot.sh"
+
+# Executing root.sh in home directory as root.
+- name: "Executing root.sh in home directory as root."
+  shell: sh "{{ oracle_client_home_directory }}/root.sh"
