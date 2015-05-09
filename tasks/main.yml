@@ -84,7 +84,7 @@
 
 # Installing Oracle Client
 - name: "Installing Oracle Client."
-  shell: "/bin/bash {{ oracle_client_download_unarchive }}/runInstaller -silent -ignorePrereq -ignoreSysPrereqs -noconfig -responseFile {{ oracle_client_download_rsp }}"
+  shell: "/bin/bash {{ oracle_client_download_unarchive }}/runInstaller -silent -waitforcompletion -ignorePrereq -ignoreSysPrereqs -noconfig -responseFile {{ oracle_client_download_rsp }}"
   when: st_oracle_client_home_directory.stat.exists == False or st_oracle_client_inventory_directory.stat.exists == False
   sudo_user: "{{ oracle_client_user }}"
 
